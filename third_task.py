@@ -1,0 +1,28 @@
+#Dupla Juliana Carla e Lucas Hiago
+
+'''
+O programa foi testado com as seguintes entradas e saidas
+Input= DNA_string = 'ATGGTCTACATAGCTGACAAACAGCACGTAGCAATCGGTCGAATCTCGAGAGGCATATGGTCACATGATCGGTCGAGCGTGTTTCAAAGTTTGCGCCTAG',
+introns = ['ATCGGTCGAA', 'ATCGGTCGAGCGTGT']):
+Output= DNA sem introns
+
+answer = 'ATGGTCTACATAGCTGACAAACAGCACGTAGCATCTCGAGAGGCATATGGTCACATGTTCAAAGTTTGCGCCTAG'
+'''
+
+#DNA = 'ATGGTCTACATAGCTGACAAACAGCACGTAGCAATCGGTCGAATCTCGAGAGGCATATGGTCACATGATCGGTCGAGCGTGTTTCAAAGTTTGCGCCTAG'
+
+DNA = input()
+
+#introns = ['ATCGGTCGAA', 'ATCGGTCGAGCGTGT']
+introns = input().split()
+
+for intron in introns:
+    DNA = DNA.replace(intron, ' ')
+
+list_of_DNA = DNA.split()
+DNA = ""
+
+for dna in list_of_DNA:
+    DNA += dna
+
+print(DNA)
