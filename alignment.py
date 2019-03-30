@@ -10,7 +10,6 @@ class Arrow:
     def __init__(self):
         self.direction = None
         self.cell = None
-        self.letters = None
 
 
 class Cell:
@@ -18,6 +17,7 @@ class Cell:
         self.main_value = None
         # receive a list of arrows
         self.arrows = None
+        self.letters = None
 
 
 class DNA:
@@ -35,13 +35,13 @@ def init(DNA):
     arr = []
     for i in range(len(DNA.vertical) - 1):
         cell = Cell()
-        a = Arrow()
         cell.main_value = begin
-        a.letters = [DNA.vertical[i], DNA.horizontal[0]]
+        cell.letters = [DNA.vertical[i], DNA.horizontal[0]]
         arr2 = [cell]
         # 0 indicates was initialized
         for j in range(1, len(DNA.vertical) - 1):
             cell = Cell()
+            cell.letters = [DNA.vertical[i], DNA.horizontal[j]]
             cell.main_value = 0
             arr2.append(cell)
         arr.append(arr2)
@@ -52,9 +52,9 @@ def init(DNA):
     for i in range(len(DNA.horizontal)):
         cell = Cell()
         cell.main_value = begin
-        a = Arrow()
-        a.letters = [DNA.vertical[len(DNA.vertical) - 1], DNA.horizontal[i]]
-        cell.arrows = a
+        #a = Arrow()
+        cell.letters = [DNA.vertical[len(DNA.vertical) - 1], DNA.horizontal[i]]
+        #cell.arrows = a
         arr2.append(cell)
         begin -= 2
 
@@ -66,7 +66,7 @@ def init(DNA):
 def get_matrix(array, h, v):
     for i in range(0, len(v)):
         for j in range(0, len(h)):
-            print(array[i][j].main_value, end=' ')
+            print(array[i][j].main_value, end=" " + str(array[i][j].letters) + " ")
         print('')
     print('\n')
 
