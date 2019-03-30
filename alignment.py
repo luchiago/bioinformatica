@@ -49,7 +49,7 @@ def init(DNA):
 
     begin = 0
     arr2 = []
-    for i in range(len(DNA.horizontal) + 1):
+    for i in range(len(DNA.horizontal)):
         cell = Cell()
         cell.main_value = begin
         a = Arrow()
