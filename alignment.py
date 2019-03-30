@@ -10,6 +10,7 @@ class Arrow:
     def __init__(self):
         self.direction = None
         self.cell = None
+        self.letters = None
 
 
 class Cell:
@@ -34,7 +35,9 @@ def init(DNA):
     arr = []
     for i in range(len(DNA.vertical) - 1):
         cell = Cell()
+        a = Arrow()
         cell.main_value = begin
+        a.letters = [DNA.vertical[i], DNA.horizontal[0]]
         arr2 = [cell]
         # 0 indicates was initialized
         for j in range(1, len(DNA.vertical) - 1):
@@ -49,6 +52,9 @@ def init(DNA):
     for i in range(len(DNA.horizontal) + 1):
         cell = Cell()
         cell.main_value = begin
+        a = Arrow()
+        a.letters = [DNA.vertical[len(DNA.vertical) - 1], DNA.horizontal[i]]
+        cell.arrows = a
         arr2.append(cell)
         begin -= 2
 
@@ -63,6 +69,19 @@ def get_matrix(array, h, v):
             print(array[i][j].main_value, end=' ')
         print('')
     print('\n')
+
+
+def choice_start_value(matrix, h, v):
+    #Options is a dict of main values of cells
+    options = {}
+    for cell in matrix[0]:
+        options[cell.main_value] = cell
+    for i in range(0, len(v)):
+        cell = matrix[i][len(h) - 1]
+        options[cell.main_value] = cell
+
+    major = max(options.keys())
+    return options[major]
 
 
 if __name__ == "__main__":
@@ -109,6 +128,7 @@ if __name__ == "__main__":
             arrows = []
             for op in options.keys():
                 a = Arrow()
+                a.letters = [v[i], h[j]]
                 if op == major:
                     if options[op] == 'left':
                         a.cell = matrix[i][j - 1]
@@ -119,9 +139,22 @@ if __name__ == "__main__":
                         a.direction = 'under'
                         arrows.append(a)
                     elif options[op] == 'diagonal':
+                        a.cell = matrix[i + 1][j - 1]
                         a.direction = 'diagonal'
                         arrows.append(a)
             matrix[i][j].main_value = major
             matrix[i][j].arrows = arrows
 
     get_matrix(matrix, h, v)
+
+    #Traceback
+    start_cell = choice_start_value(matrix, h, v)
+    print(type(start_cell))
+    '''score = 0
+    upper_alignment = down_alignment = ""
+    while start_cell.arrows is not None:
+        score += start_cell.main_value
+        for i in start_cell.arrows:
+            for j in i:
+                j.
+        upper_alignment += start_cell.arrows'''
