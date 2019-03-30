@@ -145,6 +145,8 @@ if __name__ == "__main__":
                         a.cell = matrix[i + 1][j - 1]
                         a.direction = 'diagonal'
                         arrows.append(a)
+            if LOCAL is True and major < 0:
+                major = 0
             matrix[i][j].main_value = major
             matrix[i][j].arrows = arrows
 
@@ -156,9 +158,10 @@ if __name__ == "__main__":
     upper_alignment = down_alignment = ""
     limit = max((len(v) - 1), (len(h) - 1))
     for i in range(limit):
+        if LOCAL is True and start_cell.main_value < 0:
+            start_cell.main_value = 0
         score += start_cell.main_value
         arrows = start_cell.arrows
-
         if start_cell.letters[0] == 'Z':
             upper_alignment += '-'
         else:
