@@ -9,22 +9,14 @@ Use Smith-Waterman algorithm
 class Arrow:
     def __init__(self):
         self.direction = None
+        self.cell = None
 
 
 class Cell:
     def __init__(self):
         self.main_value = None
-        self.left_value = None
-        self.under_value = None
-        self.diagonal_value = None
         # receive a list of arrows
         self.arrows = None
-
-    def choose_main_value(self):
-        self.main_value = max(self.diagonal_value, self.left_value, self.under_value)
-
-    def set_arrows(self, arrows):
-        self.arrows = arrows
 
 
 class DNA:
@@ -38,14 +30,15 @@ class DNA:
 
 
 def init(DNA):
-    begin = (-2) * len(DNA.vertical)
+    begin = (-2) * (len(DNA.vertical) - 1)
     arr = []
-    for i in range(len(DNA.vertical)):
+    for i in range(len(DNA.vertical) - 1):
         cell = Cell()
         cell.main_value = begin
         arr2 = [cell]
         # 0 indicates was initialized
-        for j in range(1, len(DNA.vertical)):
+        for j in range(1, len(DNA.vertical) - 1):
+            cell = Cell()
             cell.main_value = 0
             arr2.append(cell)
         arr.append(arr2)
@@ -54,6 +47,7 @@ def init(DNA):
     begin = 0
     arr2 = []
     for i in range(len(DNA.horizontal) + 1):
+        cell = Cell()
         cell.main_value = begin
         arr2.append(cell)
         begin -= 2
@@ -63,14 +57,27 @@ def init(DNA):
     return arr
 
 
-def get_matrix(array):
-    for i in array:
-        print(i)
+def get_matrix(array, h, v):
+    for i in range(0, len(v)):
+        for j in range(0, len(h)):
+            print(array[i][j].main_value, end=' ')
+        print('')
+    print('\n')
 
 
 if __name__ == "__main__":
+
+    # Tip: 'Z' represents the special symbol
     h = ['T', 'C', 'G']
-    v = ['G', 'C', 'T', 'A']
+    v = ['A', 'T', 'C', 'G']
+    v.insert(0, 'Z')
+    h.insert(0, 'Z')
+    v = v[::-1]
+    print('Vertical: ')
+    for letter in v: print(letter, end='\n')
+    print('Horizontal: ')
+    for letter in h: print(letter, end=' ')
+    print('\n')
 
     '''
     Values for scores
@@ -81,16 +88,40 @@ if __name__ == "__main__":
 
     DNA = DNA(h, v)
     matrix = init(DNA)
-    get_matrix(matrix)
+    get_matrix(matrix, h, v)
 
-    #Begin Global Alignment
-    control = len(v) - 1
-    limit = len(h)
-    for i in range(control, 0, -1):
-        for j in range(1, limit):
-            matrix[i][j]
+    # Begin Global Alignment
+    control = len(h)
+    limit = len(v) - 2
 
-    '''
-    ISSUES
-    Change get_matrix
-    '''
+    for i in range(limit, -1, -1):
+        for j in range(1, control):
+            left = matrix[i][j - 1].main_value - 2
+            under = matrix[i + 1][j].main_value - 2
+            if v[i] == h[j]:
+                # Match
+                diagonal = matrix[i + 1][j - 1].main_value + match
+            else:
+                # Mismatch
+                diagonal = matrix[i + 1][j - 1].main_value + mismatch
+            options = {left : 'left', under : 'under', diagonal: 'diagonal'}
+            major = max(left, under, diagonal)
+            arrows = []
+            for op in options.keys():
+                a = Arrow()
+                if op == major:
+                    if options[op] == 'left':
+                        a.cell = matrix[i][j - 1]
+                        a.direction = 'left'
+                        arrows.append(a)
+                    elif options[op] == 'under':
+                        a.cell = matrix[i + 1][j]
+                        a.direction = 'under'
+                        arrows.append(a)
+                    elif options[op] == 'diagonal':
+                        a.direction = 'diagonal'
+                        arrows.append(a)
+            matrix[i][j].main_value = major
+            matrix[i][j].arrows = arrows
+
+    get_matrix(matrix, h, v)
