@@ -90,8 +90,9 @@ if __name__ == "__main__":
     # Tip: 'Z' represents the special symbol
     h = ['T', 'G', 'T']
     v = ['G', 'T', 'G', 'T']
+    #WITH THIS GLOBAL AND LOCAL ARE RIGHT, TEST WITH SLIDE ONE
     # if is local
-    LOCAL = True
+    LOCAL = False
     v.insert(0, 'Z')
     h.insert(0, 'Z')
     v = v[::-1]
