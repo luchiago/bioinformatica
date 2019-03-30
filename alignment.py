@@ -66,7 +66,8 @@ def init(DNA):
 def get_matrix(array, h, v):
     for i in range(0, len(v)):
         for j in range(0, len(h)):
-            print(array[i][j].main_value, end=" " + str(array[i][j].letters) + " ")
+            #print(array[i][j].main_value, end=" " + str(array[i][j].letters) + " ")
+            print(array[i][j].main_value, end=" ")
         print('')
     print('\n')
 
@@ -87,8 +88,10 @@ def choice_start_value(matrix, h, v):
 if __name__ == "__main__":
 
     # Tip: 'Z' represents the special symbol
-    h = ['T', 'C', 'G']
-    v = ['A', 'T', 'C', 'G']
+    h = ['T', 'G', 'T']
+    v = ['G', 'T', 'G', 'T']
+    # if is local
+    LOCAL = True
     v.insert(0, 'Z')
     h.insert(0, 'Z')
     v = v[::-1]
@@ -109,7 +112,7 @@ if __name__ == "__main__":
     matrix = init(DNA)
     get_matrix(matrix, h, v)
 
-    # Begin Global Alignment
+    # Begin Alignment
     control = len(h)
     limit = len(v) - 2
 
@@ -149,12 +152,31 @@ if __name__ == "__main__":
 
     #Traceback
     start_cell = choice_start_value(matrix, h, v)
-    print(type(start_cell))
-    '''score = 0
+    score = 0
     upper_alignment = down_alignment = ""
-    while start_cell.arrows is not None:
+    limit = max((len(v) - 1), (len(h) - 1))
+    for i in range(limit):
         score += start_cell.main_value
-        for i in start_cell.arrows:
-            for j in i:
-                j.
-        upper_alignment += start_cell.arrows'''
+        arrows = start_cell.arrows
+
+        if start_cell.letters[0] == 'Z':
+            upper_alignment += '-'
+        else:
+            upper_alignment += start_cell.letters[0]
+        if start_cell.letters[1] == 'Z':
+            down_alignment += '-'
+        else:
+            down_alignment += start_cell.letters[0]
+        if start_cell.arrows is None:
+            break
+        major = []
+        for a in arrows:
+            major.append(a.cell.main_value)
+        major = max(major)
+        for a in arrows:
+            if major == a.cell.main_value:
+                start_cell = a.cell
+
+    print(upper_alignment[::-1])
+    print(down_alignment[::-1])
+    print(score)
