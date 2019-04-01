@@ -130,31 +130,48 @@ def fill_array(a, v, h, l):
     get_array(a, v, h)
     start = choice_start_cell(a, v, h)
     # print(type(start))
-    traceback(start)
+    traceback(start, None)
 
 
-def traceback(s):
-    print("Entro")
+def traceback(s, dir):
     score = 0
     upper = down = ""
+    print("Traceback")
+    print("Célula inicial escolhida: " + str(s.main_value))
     while 1:
         score += s.main_value
-        #print(score)
-        if s.letters[0] == "Z" and s.letters[1] == "Z":
-            pass
-        else:
-            if s.letters[0] == 'Z':
-                upper += '-'
-            else:
-                upper += s.letters[0]
-            if s.letters[1] == 'Z':
+        arrows = s.arrows
+        if dir is not None:
+            if dir == "left":
                 down += '-'
+                upper += s.letters[0]
+            if dir == "under":
+                upper += '-'
+                down += s.letters[1]
             else:
-                down += s.letters[0]
+                if s.letters[0] == "Z" and s.letters[1] == "Z":
+                    pass
+                else:
+                    if s.letters[0] == 'Z':
+                        upper += '-'
+                    else:
+                        upper += s.letters[0]
+                    if s.letters[1] == 'Z':
+                        down += '-'
+                    else:
+                        down += s.letters[0]
 
         if s.arrows is None:
             break
-        s = s.arrows[0].cell
+
+        major = []
+        for a in arrows:
+            major.append(a.cell.main_value)
+        major = max(major)
+        for a in arrows:
+            if major == a.cell.main_value:
+                dir = a.direction
+                s = a.cell
         #print(s.main_value)
 
     print("Score: " + str(score))
@@ -164,13 +181,13 @@ def traceback(s):
 
 if __name__ == "__main__":
 
-    # vertical = input()
-    vertical = "TGTG"
+    vertical = input()
+    # vertical = "ACCCACAATC"
     vertical = vertical[::-1]
     vertical += "Z"
     vertical = separator(vertical)
-    # horizontal = input()
-    horizontal = "TGT"
+    horizontal = input()
+    # horizontal = "ACAC"
     horizontal = horizontal.replace(horizontal, "Z" + horizontal)
     horizontal = separator(horizontal)
 
