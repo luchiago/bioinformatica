@@ -6,181 +6,187 @@ Use Smith-Waterman algorithm
 '''
 
 
+# Classes
 class Arrow:
     def __init__(self):
+        # where came from
         self.direction = None
+        # cell of origin
         self.cell = None
 
 
 class Cell:
     def __init__(self):
         self.main_value = None
-        # receive a list of arrows
+        # Can be a list of arrows
         self.arrows = None
+        # List with the letters of DNA
         self.letters = None
 
 
-class DNA:
-    '''
-    Both horizontal and vertical are list of DNA
-    '''
+def separator(word):
+    separated = []
+    for letter in word:
+        separated.append(letter)
 
-    def __init__(self, horizontal, vertical):
-        self.horizontal = horizontal
-        self.vertical = vertical
+    return separated
 
 
-def init(DNA):
-    begin = (-2) * (len(DNA.vertical) - 1)
-    arr = []
-    for i in range(len(DNA.vertical) - 1):
+def init(v, h):
+    begin = (-2) * (len(v) - 1)
+    array = []
+    for i in range(len(v) - 1):
         cell = Cell()
         cell.main_value = begin
-        cell.letters = [DNA.vertical[i], DNA.horizontal[0]]
-        arr2 = [cell]
-        # 0 indicates was initialized
-        for j in range(1, len(DNA.vertical) - 1):
+        cell.letters = [v[i], h[0]]
+        array_aux = [cell]
+        for j in range(1, len(h)):
             cell = Cell()
-            cell.letters = [DNA.vertical[i], DNA.horizontal[j]]
+            cell.letters = [v[i], h[j]]
             cell.main_value = 0
-            arr2.append(cell)
-        arr.append(arr2)
+            array_aux.append(cell)
+        array.append(array_aux)
         begin += 2
 
     begin = 0
-    arr2 = []
-    for i in range(len(DNA.horizontal)):
+    array_aux = []
+    for i in range(len(h)):
         cell = Cell()
         cell.main_value = begin
-        #a = Arrow()
-        cell.letters = [DNA.vertical[len(DNA.vertical) - 1], DNA.horizontal[i]]
-        #cell.arrows = a
-        arr2.append(cell)
+        cell.letters = [v[len(v) - 1], h[i]]
+        array_aux.append(cell)
         begin -= 2
 
-    arr.append(arr2)
+    array.append(array_aux)
 
-    return arr
+    return array
 
 
-def get_matrix(array, h, v):
+def get_array(a, v, h):
     for i in range(0, len(v)):
         for j in range(0, len(h)):
-            #print(array[i][j].main_value, end=" " + str(array[i][j].letters) + " ")
-            print(array[i][j].main_value, end=" ")
+            #print(a[i][j].main_value, end=" " + str(a[i][j].letters) + " ")
+            print(a[i][j].main_value, end=" ")
         print('')
     print('\n')
 
 
-def choice_start_value(matrix, h, v):
-    #Options is a dict of main values of cells
+def choice_start_cell(a, v, h):
     options = {}
-    for cell in matrix[0]:
-        options[cell.main_value] = cell
-    for i in range(0, len(v)):
-        cell = matrix[i][len(h) - 1]
-        options[cell.main_value] = cell
-
+    for i in range(len(h)):
+        options[a[0][i].main_value] = a[0][i]
+    for i in range(1, len(v)):
+        options[a[i][len(h) - 1].main_value] = a[i][len(h) - 1]
     major = max(options.keys())
-    return options[major]
+    for key in options.keys():
+        if key == major:
+            return options[key]
 
 
-if __name__ == "__main__":
-
-    # Tip: 'Z' represents the special symbol
-    h = ['T', 'G', 'T']
-    v = ['G', 'T', 'G', 'T']
-    #WITH THIS GLOBAL AND LOCAL ARE RIGHT, TEST WITH SLIDE ONE
-    # if is local
-    LOCAL = False
-    v.insert(0, 'Z')
-    h.insert(0, 'Z')
-    v = v[::-1]
-    print('Vertical: ')
-    for letter in v: print(letter, end='\n')
-    print('Horizontal: ')
-    for letter in h: print(letter, end=' ')
-    print('\n')
-
+def fill_array(a, v, h, l):
     '''
     Values for scores
     '''
     match = 1
     mismatch = -1
-    gap = -2
+    # gap = -2
 
-    DNA = DNA(h, v)
-    matrix = init(DNA)
-    get_matrix(matrix, h, v)
-
-    # Begin Alignment
-    control = len(h)
-    limit = len(v) - 2
-
-    for i in range(limit, -1, -1):
-        for j in range(1, control):
-            left = matrix[i][j - 1].main_value - 2
-            under = matrix[i + 1][j].main_value - 2
+    control = len(v) - 2
+    for i in range(control, -1, -1):
+        for j in range(1, len(h)):
+            left = a[i][j - 1].main_value - 2
+            under = a[i + 1][j].main_value - 2
             if v[i] == h[j]:
                 # Match
-                diagonal = matrix[i + 1][j - 1].main_value + match
+                diagonal = a[i + 1][j - 1].main_value + match
             else:
                 # Mismatch
-                diagonal = matrix[i + 1][j - 1].main_value + mismatch
-            options = {left : 'left', under : 'under', diagonal: 'diagonal'}
+                diagonal = a[i + 1][j - 1].main_value + mismatch
+            options = {left: 'left', under: 'under', diagonal: 'diagonal'}
             major = max(left, under, diagonal)
             arrows = []
             for op in options.keys():
-                a = Arrow()
-                a.letters = [v[i], h[j]]
+                arrow = Arrow()
+                arrow.letters = [v[i], h[j]]
                 if op == major:
                     if options[op] == 'left':
-                        a.cell = matrix[i][j - 1]
-                        a.direction = 'left'
-                        arrows.append(a)
+                        arrow.cell = a[i][j - 1]
+                        arrow.direction = 'left'
+                        arrows.append(arrow)
                     elif options[op] == 'under':
-                        a.cell = matrix[i + 1][j]
-                        a.direction = 'under'
-                        arrows.append(a)
+                        arrow.cell = a[i + 1][j]
+                        arrow.direction = 'under'
+                        arrows.append(arrow)
                     elif options[op] == 'diagonal':
-                        a.cell = matrix[i + 1][j - 1]
-                        a.direction = 'diagonal'
-                        arrows.append(a)
-            if LOCAL is True and major < 0:
+                        arrow.cell = a[i + 1][j - 1]
+                        arrow.direction = 'diagonal'
+                        arrows.append(arrow)
+
+            if l and major < 0:
                 major = 0
-            matrix[i][j].main_value = major
-            matrix[i][j].arrows = arrows
+            a[i][j].main_value = major
+            a[i][j].arrows = arrows
 
-    get_matrix(matrix, h, v)
+    get_array(a, v, h)
+    start = choice_start_cell(a, v, h)
+    # print(type(start))
+    traceback(start)
 
-    #Traceback
-    start_cell = choice_start_value(matrix, h, v)
+
+def traceback(s):
+    print("Entro")
     score = 0
-    upper_alignment = down_alignment = ""
-    limit = max((len(v) - 1), (len(h) - 1))
-    for i in range(limit):
-        if LOCAL is True and start_cell.main_value < 0:
-            start_cell.main_value = 0
-        score += start_cell.main_value
-        arrows = start_cell.arrows
-        if start_cell.letters[0] == 'Z':
-            upper_alignment += '-'
+    upper = down = ""
+    while 1:
+        score += s.main_value
+        #print(score)
+        if s.letters[0] == "Z" and s.letters[1] == "Z":
+            pass
         else:
-            upper_alignment += start_cell.letters[0]
-        if start_cell.letters[1] == 'Z':
-            down_alignment += '-'
-        else:
-            down_alignment += start_cell.letters[0]
-        if start_cell.arrows is None:
-            break
-        major = []
-        for a in arrows:
-            major.append(a.cell.main_value)
-        major = max(major)
-        for a in arrows:
-            if major == a.cell.main_value:
-                start_cell = a.cell
+            if s.letters[0] == 'Z':
+                upper += '-'
+            else:
+                upper += s.letters[0]
+            if s.letters[1] == 'Z':
+                down += '-'
+            else:
+                down += s.letters[0]
 
-    print(upper_alignment[::-1])
-    print(down_alignment[::-1])
-    print(score)
+        if s.arrows is None:
+            break
+        s = s.arrows[0].cell
+        #print(s.main_value)
+
+    print("Score: " + str(score))
+    print("V: " + upper[::-1])
+    print("H: " + down[::-1])
+
+
+if __name__ == "__main__":
+
+    # vertical = input()
+    vertical = "TGTG"
+    vertical = vertical[::-1]
+    vertical += "Z"
+    vertical = separator(vertical)
+    # horizontal = input()
+    horizontal = "TGT"
+    horizontal = horizontal.replace(horizontal, "Z" + horizontal)
+    horizontal = separator(horizontal)
+
+    print("Vertical:")
+    for letter in vertical:
+        print(letter, end='\n')
+
+    print("Horizontal:")
+    for letter in horizontal:
+        print(letter, end=' ')
+    print('')
+
+    array = init(vertical, horizontal)
+    # print(len(array))
+    get_array(array, vertical, horizontal)
+
+    local = int(input('Alinhamento Global (0) ou Local(1)? '))
+
+    fill_array(array, vertical, horizontal, local)

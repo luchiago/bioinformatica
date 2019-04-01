@@ -1,3 +1,4 @@
 venv
 .idea
 test.py
+alignment_old.py
