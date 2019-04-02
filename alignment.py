@@ -1,9 +1,9 @@
-'''
+"""
 This .py is about alignment
 Use of classes to align
 References: Tópicos em Bioinformática - UFPI
 Use Smith-Waterman algorithm
-'''
+"""
 
 
 # Classes
@@ -65,7 +65,7 @@ def init(v, h):
 def get_array(a, v, h):
     for i in range(0, len(v)):
         for j in range(0, len(h)):
-            #print(a[i][j].main_value, end=" " + str(a[i][j].letters) + " ")
+            # print(a[i][j].main_value, end=" " + str(a[i][j].letters) + " ")
             print(a[i][j].main_value, end=" ")
         print('')
     print('\n')
@@ -130,49 +130,40 @@ def fill_array(a, v, h, l):
     get_array(a, v, h)
     start = choice_start_cell(a, v, h)
     # print(type(start))
-    traceback(start, None)
+    traceback(start, l)
 
 
-def traceback(s, dir):
+def traceback(s, l):
     score = 0
     upper = down = ""
     print("Traceback")
-    print("Célula inicial escolhida: " + str(s.main_value))
+    print("Start cell choose: " + str(s.main_value))
     while 1:
         score += s.main_value
         arrows = s.arrows
-        if dir is not None:
-            if dir == "left":
-                down += '-'
-                upper += s.letters[0]
-            if dir == "under":
+        if l == 1 and s.main_value == 0:
+            break
+        if s.letters[0] == 'X' and s.letters[1] == 'X':
+            pass
+        else:
+            if s.letters[0] == 'X' or s.arrows[0].direction == 'left' or s.arrows[0].direction == 'under':
                 upper += '-'
-                down += s.letters[1]
             else:
-                if s.letters[0] == "Z" and s.letters[1] == "Z":
-                    pass
-                else:
-                    if s.letters[0] == 'Z':
-                        upper += '-'
-                    else:
-                        upper += s.letters[0]
-                    if s.letters[1] == 'Z':
-                        down += '-'
-                    else:
-                        down += s.letters[0]
-
+                upper += s.letters[0]
+            if s.letters[1] == 'X' or s.arrows[0].direction == 'left' or s.arrows[0].direction == 'under':
+                down += '-'
+            else:
+                down += s.letters[0]
         if s.arrows is None:
             break
-
-        major = []
-        for a in arrows:
-            major.append(a.cell.main_value)
-        major = max(major)
-        for a in arrows:
-            if major == a.cell.main_value:
-                dir = a.direction
-                s = a.cell
-        #print(s.main_value)
+        else:
+            major = []
+            for a in arrows:
+                major.append(a.cell.main_value)
+            major = max(major)
+            for a in arrows:
+                if major == a.cell.main_value:
+                    s = a.cell
 
     print("Score: " + str(score))
     print("V: " + upper[::-1])
@@ -181,14 +172,18 @@ def traceback(s, dir):
 
 if __name__ == "__main__":
 
-    vertical = input()
-    # vertical = "ACCCACAATC"
+    # vertical = input()
+    vertical = "ACCCACAATC"
+    # vertical = "ATCG"
+    # vertical = "TGTG"
     vertical = vertical[::-1]
-    vertical += "Z"
+    vertical += "X"
     vertical = separator(vertical)
-    horizontal = input()
-    # horizontal = "ACAC"
-    horizontal = horizontal.replace(horizontal, "Z" + horizontal)
+    # horizontal = input()
+    horizontal = "ACAC"
+    # horizontal = "TCG"
+    # horizontal = "TGT"
+    horizontal = horizontal.replace(horizontal, "X" + horizontal)
     horizontal = separator(horizontal)
 
     print("Vertical:")
@@ -198,12 +193,12 @@ if __name__ == "__main__":
     print("Horizontal:")
     for letter in horizontal:
         print(letter, end=' ')
-    print('')
+    print('\n')
 
     array = init(vertical, horizontal)
     # print(len(array))
     get_array(array, vertical, horizontal)
 
-    local = int(input('Alinhamento Global (0) ou Local(1)? '))
+    local = int(input('Global Alignment(0) or Local(1)? '))
 
     fill_array(array, vertical, horizontal, local)
