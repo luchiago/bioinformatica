@@ -1,4 +1,6 @@
 venv
 .idea
+.vscode
 test.py
 alignment_old.py
+alinhamento.py
