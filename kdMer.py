@@ -48,7 +48,7 @@ def gerar_arquivo(k, d, sequence):
         ind_k1 += 1
         ind_k2 += 1
 
-        ind_d1 = ind_k2 + 1
+        ind_d1 = ind_k2 + d
         ind_d2 = ind_d1 + k
     
     kdmer = "["
