@@ -1,7 +1,7 @@
 
-gap = -10
+gap = -2
 match = 5
-mismatch = -3
+mismatch = -1
 
 def build_table(v, h):
     table = []
@@ -58,11 +58,12 @@ def traceback(v, h, table, table_of_dir, ty):
 
     pos = pos_initial
 
+    flag_score = 0
+
     while 1:
         i, j = pos[0], pos[1]
 
         if table_of_dir[i][j] is None or (ty == 1 and table[i][j] == 0):
-            score += table[i][j]
 
             if v[i] == "X":
                 v_final += "-"
@@ -81,7 +82,9 @@ def traceback(v, h, table, table_of_dir, ty):
                     h_final += h[j]
             break
 
-        score += table[i][j]
+        if flag_score == 0:
+            score += table[i][j]
+        flag_score = 1
         choose = table_of_dir[i][j]
         v_final += choose[1][0]
         h_final += choose[1][1]
@@ -150,17 +153,26 @@ def alignment(t, v, h, table):
 
 if __name__ == "__main__":
 
+    '''
+    ACCGGTCGAGTGCGCGGAAGCCGGCCGAA
+    GTCGTTCGGAATGCCGTTGCTCTGTAAA
+    '''
+
     #vertical
-    v = input("Vertical: ")
+    #v = input("Vertical: ")
     #v = "GLSDGEWQQVLNVWGKVEADIAGHGQEVLIRLFTGHPETLEKFDKFKHLKTEAEMKASEDLKKHGTVVLTALGGILKKKGHHEAELKPLAQDHATKHKIPIKYLEFISDAIIHVLHSKHPGDFGADAQGAMTKALELFRNDIAAKYKELGFQG"
     #v = "ATCG"
     #v = "ACCCACAATC"
+    #v = "GLSDGEWQQVLNVWGKVEADIAGHGQEVLIRLFTGHP"
+    v = "ACCGGTCGAGTGCGCGGAAGCCGGCCGAA"
 
     #horizontal
-    h = input("Horizontal: ")
+    #h = input("Horizontal: ")
     #h = "MGLSDGEWQQVLNVWGKVEADIAGHGQEVLIRLFTGHPETLEKFDKFKHLKTEAEMKASEDLKKHGTVVLTALGGILKKKGHHEAELKPLAQSHATKHKIPIKYLEFISDAIIHVLHSKHPGDFGADAQGAMTKALELFRNDIAAKYKELGFQG"
     #h = "TCG"
     #h = "ACAC"
+    #h = "MGLSDGEWQQVLNVWGKVEADIAGHGQEVLIRLFTGHW"
+    h = "GTCGTTCGGAATGCCGTTGCTCTGTAAA"
     
     v = v[::-1]
     v += "X"
