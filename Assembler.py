@@ -129,11 +129,19 @@ def fill(Graph, normal_list, reverse_list):
 
   return (normal_list, Graph, reverse_list)
 
-def get_kd():
+def get_kd(file):
+  k = file.find('k')
+  k = int(file[k + 1])
+  d = file.find('d')
+  d = int(file[d + 1])
+  print(k, d)
+  return k, d
+  
   
 
 if __name__ == '__main__':
   file = input('Input file name of generated kdmer:')
+  k, d = get_kd(file)
   list = {}
   reverse_list = {}
   array = []
