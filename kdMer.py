@@ -33,7 +33,7 @@ def gerar_arquivo(k, d, sequence):
     kdmers = []
     ind_k1 = 0
     ind_k2 = k
-    ind_d1 = ind_k2 + 1
+    ind_d1 = ind_k2 + d
     ind_d2 = ind_d1 + k
 
     while ind_d2 != (len(sequence) + 1):
